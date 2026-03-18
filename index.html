@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Shivam Kumar">
+<title>Birthday</title>
+
+<link rel="icon" href="logo.ico" type="image/x-icon">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+<style>
+
+    :root{
+        --red-background:#ff2b2b;
+        --red-shadow:red;
+        --green-shadow:#00ff9d;
+        --intro-text-color:#ffffff;
+    }
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+color:white;
+text-align:center;
+overflow-x:hidden;
+}
+
+/* BACKGROUND */
+
+#particles-bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+background:linear-gradient(135deg,#000,#140000,#2b0000);
+}
+
+/* CENTER SECTIONS */
+
+.center{
+position:fixed;
+width:100%;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+}
+
+/* START BUTTON */
+
+#startBtn{
+padding:18px 40px;
+font-size:1.4rem;
+background:var(--red-background);
+border:none;
+border-radius:40px;
+color:white;
+cursor:pointer;
+box-shadow:0 0 15px red;
+}
+
+/* INTRO TEXT */
+
+#intro{
+display:none;
+}
+
+.intro-text{
+font-size:3rem;
+color:#ff4d4d;
+color:var(--intro-text-color)
+}
+
+.intro-text span{
+display:block;
+opacity:0;
+animation:fadeUp 1s forwards, glow 2s infinite alternate;
+}
+
+.intro-text span:nth-child(1){animation-delay:0.5s;}
+.intro-text span:nth-child(2){animation-delay:1.5s;}
+.intro-text span:nth-child(3){animation-delay:2.5s;}
+.intro-text span:nth-child(4){animation-delay:3.5s;}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes glow{
+from{text-shadow:0 0 5px red;}
+to{text-shadow:0 0 15px red;}
+}
+
+/* MAIN CONTENT */
+
+#mainContent{
+display:none;
+padding-top:120px;
+padding-bottom: 40px;
+}
+
+header h1{
+font-size:3rem;
+color:#ff3b3b;
+text-shadow:0 0 10px red;
+}
+
+header p{
+margin-top:10px;
+color:#ccc;
+}
+
+/* CARDS */
+
+.container{
+margin-top:40px;
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:25px;
+width:90%;
+max-width:1100px;
+margin-left:auto;
+margin-right:auto;
+}
+
+.card{
+background:#111;
+padding:35px;
+border-radius:15px;
+cursor:pointer;
+transition:0.3s;
+border:1px solid var(--green-shadow)
+
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 0 20px var(--intro-text-color);
+}
+
+.card h2{
+color:#ff4d4d;
+margin-bottom:10px;
+}
+
+.card p{
+color:#aaa;
+}
+
+/* POPUP */
+
+#partyPopup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#111;
+padding:30px;
+border-radius:10px;
+display:none;
+box-shadow:0 0 20px red;
+width:90%;
+max-width:800px;
+z-index:10001;
+}
+
+.video-wrapper {
+position:relative;
+padding-bottom:56.25%; /* 16:9 Aspect Ratio */
+height:0;
+}
+
+.video-wrapper video {
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+border:none;
+border-radius:8px;
+}
+
+#partyPopup button{
+margin-top:15px;
+padding:10px 20px;
+border:none;
+background:#ff2b2b;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+
+#wishPopup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#111;
+padding:30px;
+border-radius:12px;
+width:90%;
+max-width:400px;
+display:none;
+box-shadow:0 0 25px #27403C;
+z-index:9999;
+}
+
+#wishPopup h2{
+color:#ff4d4d;
+margin-bottom:15px;
+}
+
+#wishPopup input,
+#wishPopup textarea{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border:none;
+border-radius:6px;
+background:#1a1a1a;
+color:white;
+padding-top: 10px;
+
+}
+
+#wishPopup textarea{
+height:100px;
+resize:none;
+padding-top:10px;
+padding-bottom: 10px;
+}
+
+#wishPopup button{
+padding:10px 20px;
+border:none;
+background:#ff2b2b;
+color:white;
+border-radius:6px;
+cursor:pointer;
+margin:5px;
+padding-top: 10px;
+padding-bottom: 10px;
+}
+
+#wishSuccess{
+margin-top:10px;
+color:#00ff9d;
+}
+
+#thankYouPopup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#111;
+padding:50px;
+border-radius:12px;
+width:90%;
+max-width:600px;
+display:none;
+box-shadow:0 0 25px #00ff9d;
+z-index:10000;
+text-align:center;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media(max-width: 768px){
+  .intro-text{
+    font-size: 2.2rem;
+  }
+  header h1 {
+    font-size: 2rem;
+    margin-top: -10px;
+  }
+}
+
+@media(max-width: 500px){
+  .intro-text{
+    font-size: 1.6rem;
+  }
+  header h1{
+    font-size: 1.6rem;
+    margin-top: -10px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  #startBtn{
+    padding: 12px 30px;
+    font-size: 1.1rem;
+  }
+  .container{
+    width: 70%;
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .card{
+    padding: 20px   ;
+     aspect-ratio: 1.3/1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .countdown-box{
+    width: auto;
+    aspect-ratio: auto;
+    display: inline-block;
+  }
+}
+
+/* COUNTDOWN BOX */
+
+.countdown-box{
+position:relative;
+display:inline-block;
+padding:8px 15px;
+margin-top:15px;
+border-radius:12px;
+font-size:0.9rem;
+color:#ff9999;
+z-index:1;
+}
+
+/* MOVING BORDER WRAPPER */
+
+.countdown-box::before{
+content:"";
+position:absolute;
+top:-2px;
+left:-2px;
+right:-2px;
+bottom:-2px;
+border-radius:14px;
+
+/* GRADIENT BORDER */
+background:linear-gradient(
+    90deg,
+    #ff0000,
+    #ff7300,
+    var(--green-shadow),
+    #ff0000,
+    #ff7300,
+    #ff0000d6,
+    var(--green-shadow)
+);
+
+background-size:300% 300%;
+
+/* ANIMATION */
+animation:borderMove 2s linear infinite;
+
+z-index:-1;
+}
+
+/* INNER BACKGROUND */
+
+.countdown-box::after{
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#111;
+border-radius:12px;
+z-index:-1;
+}
+
+/* ANIMATION */
+
+@keyframes borderMove{
+0%{
+background-position:0% 50%;
+}
+100%{
+background-position:300% 50%;
+}
+}
+
+#countdown{
+  margin: 0;
+}
+
+
+
+/* SHARE POPUP */
+
+#sharePopup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#111;
+padding:30px;
+border-radius:12px;
+width:90%;
+max-width:350px;
+display:none;
+box-shadow:0 0 20px #00ff9d;
+z-index:10000;
+text-align:center;
+}
+
+#sharePopup button{
+display:block;
+width:100%;
+margin:8px 0;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#ff2b2b;
+color:white;
+cursor:pointer;
+font-size:1rem;
+}
+
+/* FLOATING BUTTON */
+
+#chatToggle{
+position:fixed;
+bottom:20px;
+right:20px;
+width:60px;
+height:60px;
+background:var(--green-shadow);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+cursor:pointer;
+box-shadow:0 0 10px red;
+z-index:9999;
+}
+
+/* CHATBOX */
+
+#chatbot{
+position:fixed;
+bottom:90px;
+right:20px;
+width:280px;
+background:#111;
+border-radius:12px;
+box-shadow:0 0 10px var(--green-shadow);
+overflow:hidden;
+display:none;
+z-index:9999;
+}
+
+#chatHeader{
+background:#050505;
+padding:10px;
+font-weight:bold;
+}
+
+#chatBody{
+height:220px;
+overflow-y:auto;
+padding:10px;
+font-size:0.9rem;
+}
+
+/* BUTTONS */
+
+.quick-btns{
+margin-top:10px;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.quick-btns button{
+background:#1a1a1a;
+border:none;
+padding:8px;
+border-radius:8px;
+color:#ff4d4d;
+cursor:pointer;
+}
+
+.quick-btns button:hover{
+background:#ff2b2b;
+color:white;
+}
+
+/* MESSAGES */
+
+.bot-msg{
+margin:6px 0;
+}
+
+.user-msg{
+text-align:right;
+margin:6px 0;
+}
+
+/* TYPING ANIMATION */
+
+.typing{
+font-size:0.9rem;
+color:#aaa;
+}
+
+.typing::after{
+content:"...";
+animation:dots 1s infinite;
+}
+
+@keyframes dots{
+0%{content:".";}
+33%{content:"..";}
+66%{content:"...";}
+100%{content:".";}
+}
+</style>
+</head>
+<!-- FLOATING CHAT BUTTON -->
+<div id="chatToggle">💬</div>
+<div id="chatbot">
+
+<div id="chatHeader">🤖 Ask About Shivam</div>
+
+<div id="chatBody">
+
+<div class="bot-msg">Hi! 👋 Choose a question:</div>
+
+<div class="quick-btns">
+<button onclick="quickReply('birthday')">🎂 Birthday?</button>
+<button onclick="quickReply('age')">🎈 Age?</button>
+<button onclick="quickReply('hobby')">🎮 Hobbies?</button>
+<button onclick="quickReply('gift')">🎁 Gift idea?</button>
+</div>
+
+</div>
+
+</div>
+<body>
+
+<div id="particles-bg"></div>
+
+<!-- START SCREEN -->
+
+<div id="startScreen" class="center">
+<button id="startBtn">LET'S GO 🚀</button>
+</div>
+
+<!-- INTRO -->
+
+<div id="intro" class="center">
+<h1 class="intro-text">
+<span>INTOXICATING</span>
+<span>THE WORLD</span>
+<span>ON</span>
+<span>19TH MARCH 2008</span>
+</h1>
+</div>
+
+<audio id="bgm">
+<source src="bgm.mp3" type="audio/mpeg">
+</audio>
+
+<!-- MAIN PAGE -->
+
+<div id="mainContent">
+
+<header>
+<h1>🎉🎉HAPPY Birthday Shivam!🎉🎉</h1>
+<p>You can offer something to make my day special</p>
+
+<div class="countdown-box">
+    <h2 id="countdown"></h2>
+</div>
+</header>
+
+<div class="container">
+<div class="card" id="wishCard">
+<h2>💌 Give Wishes</h2>
+<p>Send your wishes</p>
+</div>
+
+<div class="card" onclick="window.location.href='giftpage.html'">
+<h2>🎁 Give Gifts</h2>
+<p>Send a gift</p>
+</div>
+
+<div class="card" id="partyCard">
+<h2>🎉 Take a Party</h2>
+<p>Click here to give a party</p>
+</div>
+
+
+<div class="card" id="shareCard">
+<h2>📤 Share</h2>
+<p>Share this birthday page</p>
+</div>
+</div>
+
+</div>
+
+<!-- PARTY POPUP -->
+
+<div id="partyPopup">
+    <div class="video-wrapper">
+        <video id="partyVideo" playsinline style="pointer-events: none;"></video>
+    </div>
+<button onclick="closeParty()">Close Party</button>
+</div>
+<div id="wishPopup">
+
+<h2>Send Your Wish 🎉</h2>
+
+<input type="text" id="userName" placeholder="Your Name">
+<button onclick="startRecording()">🎤 Start Recording</button>
+<button onclick="stopRecording()">⏹ Stop</button>
+
+<audio id="audioPlayback" controls style="margin-top:10px; width:100%; display:none;"></audio>
+<textarea id="wishText" placeholder="Write your birthday wish..."></textarea>
+
+<button onclick="submitWish()">Send Wish</button>
+<button onclick="closeWish()">Close</button>
+
+</div>
+
+<div id="thankYouPopup">
+<h2 style="color:#00ff9d; margin-bottom:10px;">Apne wish ko apne gand mai dal do..</h2>
+<p id="thankYouText" style="color:white; margin-bottom:20px;"></p>
+<button onclick="closeThankYou()" style="background:#00ff9d; color:black; font-weight:bold; padding:10px 20px; border:none; border-radius:6px; cursor:pointer;">Awesome</button>
+</div>
+<div id="sharePopup">
+
+<h2 style="color:#ff4d4d; margin-bottom:15px;">Share This Page 🎉</h2>
+
+<button onclick="shareWhatsApp()">📱 WhatsApp</button>
+<button onclick="copyLink()">🔗 Copy Link</button>
+<button onclick="nativeShare()">🚀 More Options</button>
+
+<p id="copyMsg" style="color:#00ff9d; margin-top:10px;"></p>
+
+<button onclick="closeShare()" style="margin-top:15px;">Close</button>
+
+</div>
+<script>
+
+    /* TOGGLE CHAT */
+
+let chatToggle = document.getElementById("chatToggle");
+let chatbot = document.getElementById("chatbot");
+
+chatToggle.onclick = function(){
+    chatbot.style.display =
+        chatbot.style.display === "block" ? "none" : "block";
+};
+
+/* QUICK REPLY WITH TYPING */
+
+function quickReply(type){
+
+let chatBody = document.getElementById("chatBody");
+
+let userText = "";
+let reply = "";
+
+if(type === "birthday"){
+    userText = "🎂 Birthday?";
+    reply = "At your father birhdate..🎉";
+}
+else if(type === "age"){
+    userText = "🎈 Age?";
+    reply = "Same as your father...😎";
+}
+else if(type === "hobby"){
+    userText = "🎮 Hobbies?";
+    reply = "Doing sexxxx....🔥";
+}
+else if(type === "gift"){
+    userText = "🎁 Gift idea?";
+    reply = "Check gift section 🎁";
+}
+
+/* USER MESSAGE */
+chatBody.innerHTML += `<div class="user-msg">${userText}</div>`;
+
+/* TYPING EFFECT */
+let typingDiv = document.createElement("div");
+typingDiv.className = "typing";
+typingDiv.innerText = "🤖 Typing";
+chatBody.appendChild(typingDiv);
+
+chatBody.scrollTop = chatBody.scrollHeight;
+
+/* AFTER DELAY SHOW ANSWER */
+setTimeout(()=>{
+    typingDiv.remove();
+    chatBody.innerHTML += `<div class="bot-msg">🤖 ${reply}</div>`;
+    chatBody.scrollTop = chatBody.scrollHeight;
+},1200);
+
+}
+  /* VOICE RECORDING */
+
+let mediaRecorder;
+let audioChunks = [];
+
+async function startRecording(){
+    try{
+        let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => {
+            audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            let blob = new Blob(audioChunks, { type: 'audio/mp3' });
+            let audioURL = URL.createObjectURL(blob);
+
+            let audio = document.getElementById("audioPlayback");
+            audio.src = audioURL;
+            audio.style.display = "block";
+        };
+
+        mediaRecorder.start();
+    }catch(err){
+        alert("Microphone access denied or not supported");
+    }
+}
+
+function stopRecording(){
+    if(mediaRecorder){
+        mediaRecorder.stop();
+    }
+}
+/* COUNTDOWN TIMER */
+
+let countdownEl = document.getElementById("countdown");
+
+// SET YOUR DATE HERE
+let targetDate = new Date("March 19, 2026 00:00:00").getTime();
+
+function updateCountdown(){
+    let now = new Date().getTime();
+    let gap = targetDate - now;
+
+    if(gap <= 0){
+        countdownEl.innerHTML = "🎉 It's Today! 🎉";
+        return;
+    }
+
+    let d = Math.floor(gap/(1000*60*60*24));
+    let h = Math.floor((gap%(1000*60*60*24))/(1000*60*60));
+    let m = Math.floor((gap%(1000*60*60))/(1000*60));
+    let s = Math.floor((gap%(1000*60))/1000);
+
+    countdownEl.innerHTML = `⏳ ${d}Days ${h}h ${m}m ${s}s left`;
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+
+/* SHARE FEATURE */
+
+let shareCard = document.getElementById("shareCard");
+
+shareCard.onclick = function(){
+    document.getElementById("sharePopup").style.display = "block";
+};
+
+function closeShare(){
+    document.getElementById("sharePopup").style.display = "none";
+}
+
+/* PAGE URL */
+let pageURL = window.location.href;
+
+/* WHATSAPP SHARE */
+function shareWhatsApp(){
+    let text = "🎉 Check out this amazing birthday page! 🎂👇\n" + pageURL;
+    let url = "https://wa.me/?text=" + encodeURIComponent(text);
+    window.open(url, "_blank");
+}
+
+/* COPY LINK */
+function copyLink(){
+    navigator.clipboard.writeText(pageURL);
+    document.getElementById("copyMsg").innerText = "✅ Link Copied!";
+}
+
+/* NATIVE SHARE (MOBILE) */
+function nativeShare(){
+    if(navigator.share){
+        navigator.share({
+            title: "Birthday Celebration 🎉",
+            text: "Check out this awesome birthday page!",
+            url: pageURL
+        });
+    }else{
+        alert("Sharing not supported on this device");
+    }
+}
+/* PARTICLE BACKGROUND */
+
+tsParticles.load("particles-bg",{
+particles:{
+number:{value:80,density:{enable:true,area:800}},
+color:{value:"#ff2b2b"},
+links:{enable:true,color:"#ff2b2b",distance:150},
+move:{enable:true,speed:1},
+size:{value:{min:1,max:4}},
+opacity:{value:0.6}
+},
+interactivity:{
+events:{
+onHover:{enable:true,mode:"repulse"},
+onClick:{enable:true,mode:"push"}
+},
+modes:{
+repulse:{distance:120},
+push:{quantity:4}
+}
+}
+});
+/* FLOW CONTROL */
+
+let startBtn=document.getElementById("startBtn");
+let startScreen=document.getElementById("startScreen");
+let intro=document.getElementById("intro");
+let mainContent=document.getElementById("mainContent");
+let bgm=document.getElementById("bgm");
+
+startBtn.onclick=function(){
+
+startScreen.style.display="none";
+
+intro.style.display="flex";
+
+bgm.play();
+
+/* Stop music after 20 seconds */
+setTimeout(()=>{
+    bgm.pause();
+    bgm.currentTime = 0;
+}, 10000);
+
+/* show main after intro */
+
+setTimeout(()=>{
+
+intro.style.display="none";
+mainContent.style.display="block";
+
+/* Confetti from sides */
+
+sideConfetti();
+
+},6000);
+
+};
+
+/* PARTY POPUP */
+const partyVideo = document.getElementById('partyVideo');
+
+document.getElementById("partyCard").onclick = function () {
+    document.getElementById("partyPopup").style.display = "block";
+    partyVideo.src = 'vid.mp4';
+    partyVideo.load();
+    partyVideo.play();
+};
+function closeParty() {
+    partyVideo.pause();
+    partyVideo.currentTime = 0;
+    document.getElementById("partyPopup").style.display = "none";
+}
+partyVideo.addEventListener('ended', closeParty);
+
+/* WISH POPUP */
+
+let wishCard=document.getElementById("wishCard");
+
+wishCard.onclick=function(){
+document.getElementById("wishPopup").style.display="block";
+};
+
+function closeWish(){
+document.getElementById("wishPopup").style.display="none";
+}
+
+function submitWish(){
+
+let name=document.getElementById("userName").value.trim();
+let wish=document.getElementById("wishText").value.trim();
+
+if(name==="" || wish===""){
+alert("Please write your name and wish");
+return;
+}
+
+closeWish();
+
+document.getElementById("thankYouText").innerText = "🎉 Thank you "+name+" for your wish!";
+document.getElementById("thankYouPopup").style.display="block";
+
+document.getElementById("userName").value = "";
+document.getElementById("wishText").value = "";
+
+if (typeof confetti === 'function') {
+    confetti({
+        particleCount:180,
+        spread:90
+    });
+}
+
+}
+
+function closeThankYou(){
+document.getElementById("thankYouPopup").style.display="none";
+}
+
+
+function sideConfetti(){
+
+for(let i=0;i<3;i++){
+
+setTimeout(()=>{
+
+confetti({
+particleCount:250,
+angle:60,
+spread:90,
+origin:{x:0}
+});
+
+confetti({
+particleCount:250,
+angle:120,
+spread:90,
+origin:{x:1}
+});
+
+}, i*300);
+
+}
+
+}
+
+
+
+
+</script>
+
+</body>
+</html>

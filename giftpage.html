@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Shivam Kumar">
+<title>Send Gifts</title>
+<link rel="icon" href="logo.ico" type="image/x-icon">
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+min-height:100vh;
+color:white;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:40px 20px;
+}
+
+/* HEADER */
+
+header{
+text-align:center;
+margin-bottom:40px;
+}
+
+header h1{
+font-size:2.8rem;
+color:#ff3b3b;
+text-shadow:0 0 10px red;
+}
+
+header p{
+margin-top:10px;
+color:#ccc;
+}
+
+.back-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    padding: 10px 20px;
+    background: #ff2b2b;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    z-index: 1000;
+    transition: 0.3s;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+.back-btn:hover {
+    background: #ff0000;
+    transform: scale(1.05);
+}
+
+/* GRID */
+
+.gift-container{
+margin-top:30px;
+display:grid;
+grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+gap:25px;
+width:100%;
+max-width:1000px;
+}
+
+/* PHONE SCROLL */
+
+@media(max-width:900px){
+
+}
+
+/* CARD */
+
+.gift-card{
+background:#111;
+padding:35px 25px;
+border-radius:15px;
+text-align:center;
+cursor:pointer;
+border:1px solid rgba(255,0,0,0.3);
+transition:0.3s;
+box-shadow:0 0 15px rgba(255,0,0,0.2);
+}
+
+.gift-card:hover{
+transform:translateY(-8px);
+box-shadow:0 0 25px red;
+}
+
+/* ICON */
+
+.gift-icon{
+font-size:40px;
+margin-bottom:15px;
+}
+
+/* TITLE */
+
+.gift-card h2{
+color:#ff4d4d;
+margin-bottom:8px;
+}
+
+/* TEXT */
+
+.gift-card p{
+color:#aaa;
+font-size:0.9rem;
+}
+
+/* BUTTON */
+
+.send-btn{
+margin-top:15px;
+padding:10px 20px;
+background:#ff2b2b;
+border:none;
+color:white;
+border-radius:25px;
+cursor:pointer;
+}
+
+.send-btn:hover{
+background:#ff0000;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:600px){
+
+header h1{
+font-size:2rem;
+}
+
+.back-btn {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: 20px;
+}
+
+}
+
+/* QR POPUP STYLES */
+.qr-popup {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-content {
+    background-color: #111;
+    padding: 25px;
+    border: 1px solid #ff2b2b;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 300px; /* Small size */
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+}
+
+.close-qr {
+    color: #ff2b2b;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-qr:hover {
+    color: #fff;
+}
+
+.qr-img {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+#particles-bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+background:linear-gradient(135deg,#000000,#140000,#2b0000);
+}
+</style>
+</head>
+<script>
+
+tsParticles.load("particles-bg", {
+
+background:{
+color:"transparent"
+},
+
+fpsLimit:60,
+
+particles:{
+number:{
+value:60,
+density:{enable:true,area:800}
+},
+
+color:{
+value:"#ff2b2b"
+},
+
+links:{
+enable:true,
+color:"#ff2b2b",
+distance:150,
+opacity:0.3
+},
+
+move:{
+enable:true,
+speed:1
+},
+
+size:{
+value:{min:1,max:4}
+},
+
+opacity:{
+value:0.5
+}
+
+},
+
+interactivity:{
+
+events:{
+onHover:{
+enable:true,
+mode:"repulse"
+},
+onClick:{
+enable:true,
+mode:"push"
+}
+},
+
+modes:{
+repulse:{
+distance:120
+},
+push:{
+quantity:4
+}
+}
+
+},
+
+detectRetina:true
+
+});
+
+</script>
+<body>
+<div id="particles-bg"></div>
+<a href="index.html" class="back-btn">&larr; Back to Home</a>
+<header>
+<h1>🎁 Send Me a Gift</h1>
+<p>Choose something special</p>
+</header>
+
+<div class="gift-container">
+
+<div class="gift-card" id = 'cash-card'>
+<div class="gift-icon" >💸</div>
+<h2>Cash</h2>
+<p>You can give me cash</p>
+<button class="send-btn">Send Gift</button>
+</div>
+
+<div class="gift-card" id="pen-card">
+<div class="gift-icon">✒️</div>
+<h2>Pen</h2>
+<p>Gift me a nice pen</p>
+<button class="send-btn">Send Gift</button>
+</div>
+
+<div class="gift-card" id = 'laptop-card'>
+<div class="gift-icon">🎮</div>
+<h2>Game / Gadget</h2>
+<p>Support my tech addiction 😄</p>
+<button class="send-btn">Send Gift</button>
+</div>
+
+<div class="gift-card" id="sword-card">
+<div class="gift-icon">💰</div>
+<h2>Give Sword</h2>
+<p>Send a digital gift</p>
+<button class="send-btn">Send Gift</button>
+</div>
+
+
+</div>
+
+<!-- QR CODE POPUP MODAL -->
+<div id="qrModal" class="qr-popup">
+    <div class="qr-content">
+        <span class="close-qr">&times;</span>
+        <h2 style="color:#ff2b2b; font-size: 1.5rem;">Scan to Pay</h2>
+        <!-- PASTE YOUR QR CODE IMAGE LINK BELOW -->
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6MSeP9-tHEBAiDsSyaqUdrCj6Nb3FrmCxOQ&s" alt="QR Code" class="qr-img">
+    </div>
+</div>
+
+<!-- GIFT SOUND EFFECT -->
+<audio id="giftSound">
+    <source src="gareeb-audio.mp3" type="audio/mpeg">
+</audio>  
+<script>
+    // Get modal element
+    var modal = document.getElementById("qrModal");
+    // Get open button
+    var btn = document.getElementById("cash-card");
+    // Get close button
+    var span = document.getElementsByClassName("close-qr")[0];
+
+    // Listen for open click
+    btn.onclick = function() {
+        modal.style.display = "flex";
+    }
+
+    // Listen for close click
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Close on outside click
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // --- Sound effect for Pen Gift ---
+    // Get the button and the sound element
+    var penCardButton = document.querySelector("#pen-card .send-btn");
+    var giftSound = document.getElementById("giftSound");
+
+    // Listen for a click on the pen gift button
+    penCardButton.onclick = function() {
+        // Rewind sound to the start and play it
+        giftSound.currentTime = 0;
+        giftSound.play();
+
+        // Optional: Show a confirmation message
+        // alert("Thank you for the gift! ✒️");
+    }
+
+    // --- Laptop/Game Card Link ---
+    var laptopCard = document.getElementById("laptop-card");
+    laptopCard.onclick = function() {
+        // Replace 'YOUR_LINK_HERE' with the actual link you want to open
+       window.location.href = 'giftrefer.html';
+    }
+    var swordCard = document.getElementById("sword-card");
+    swordCard.onclick = function() {
+        // Replace 'YOUR_LINK_HERE' with the actual link you want to open
+        window.location.href = 'giftrefer.html';
+    }
+</script>
+
+</body>
+</html>
